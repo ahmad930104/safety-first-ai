@@ -1,0 +1,4 @@
+project_id = "gjjscoiefkqrlzxvqrza"
+
+[functions.detect-ppe]
+verify_jwt = false
