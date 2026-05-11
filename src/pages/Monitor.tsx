@@ -33,15 +33,22 @@ export default function Monitor() {
 
   const analyzeFrame = useCallback(async () => {
     const frame = captureFrame();
-    if (!frame) return;
+    if (!frame) {
+      toast.error("Camera not ready yet — please wait a moment.");
+      return;
+    }
 
     setIsAnalyzing(true);
     try {
+      console.log("[Monitor] Sending frame, size:", Math.round(frame.length / 1024), "KB");
       const { data, error: fnError } = await supabase.functions.invoke("detect-ppe", {
         body: { image: frame },
       });
 
-      if (fnError) throw fnError;
+      if (fnError) {
+        console.error("[Monitor] Function error:", fnError);
+        throw new Error(fnError.message || "Edge function error");
+      }
       if (data?.error) throw new Error(data.error);
 
       const detection = data as DetectionResult;
