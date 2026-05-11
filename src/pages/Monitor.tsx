@@ -93,7 +93,8 @@ export default function Monitor() {
       }
     } catch (err) {
       console.error("Analysis error:", err);
-      toast.error("Detection failed. Please try again.");
+      const msg = err instanceof Error ? err.message : "Detection failed";
+      toast.error(msg);
     } finally {
       setIsAnalyzing(false);
     }
